@@ -36,6 +36,7 @@ fn main() {
     let blog_post_card_template =
         read_to_string(&format!("{}/preview.html", TEMPLATE_FOLDER)).unwrap();
     let blog_post_template = read_to_string(&format!("{}/post.html", TEMPLATE_FOLDER)).unwrap();
+    let base_template = read_to_string(&format!("{}/base.html", TEMPLATE_FOLDER)).unwrap();
 
     // Iterating over md_files to create static html files
     for md_file in md_files.unwrap() {
@@ -70,6 +71,10 @@ fn main() {
                 &blog_post_template,
                 &json!({"title": title, "author": author, "date": date, "content": html }),
             )
+            .unwrap();
+
+        let content = handlebars
+            .render_template(&base_template, &json!({"title": title, "content": content}))
             .unwrap();
 
         // Writing content to static html_file
