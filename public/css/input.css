@@ -1,0 +1,42 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-slate-900 text-gray-200 p-2 w-full;
+
+  }
+  
+  h1 {
+    @apply text-4xl;
+  }
+  h2 {
+    @apply text-3xl;
+  }
+  h3 {
+    @apply text-2xl;
+  }
+  h4 {
+    @apply text-xl;
+  }
+  p {
+    @apply text-lg;
+  }
+  ul {
+    @apply list-inside;
+  }
+  li {
+    @apply list-disc;
+  }
+  a {
+    @apply text-cyan-400;
+  }
+  img {
+    @apply max-w-[80%] border-gray-700 border-2;
+  }
+  code{
+    @apply border-gray-700 border-2 border-l-8 p-2;
+  }
+}
