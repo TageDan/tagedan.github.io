@@ -1,0 +1,49 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=, initial-scale=" />
+    <title>Static Site Generation using Rust</title>
+    <link href="../css/output.css" rel="stylesheet" />
+  </head>
+  <body>
+    <div
+      class="w-full flex flex-col sm:flex-row sm:justify-center content-center gap-1 text-center border-b"
+    >
+      <a href="/index.html">Home</a>
+      <a href="/blog.html">Blog</a>
+      <a href="/portfolio.html">Portfolio</a>
+    </div>
+    <div><div class="border-b py-2 px-10">
+  <div class="text-6xl">Static Site Generation using Rust</div>
+  <h5>Author: Tage Danielsson</h5>
+  <h5>Date: 2024-07-12</h5>
+</div>
+<div class="py-2 px-10"><p>I've wanted to have my own personal website/blog for a while.
+I enjoy making projects in my spare time but since I put so much time into making them I thought it would help me to share the process.
+I also wanted a space where i could write about my other intrests like running, fishing, maths and traveling.
+Last but not least I wanted to have a portfolio for my projects.</p>
+<p>Getting started building the site I knew that I wanted to use rust. It has been my prefered language for about a year and I really enjoy learning it.
+In the begining I looked at using axum to build a server that would serve my html and handle backend-logic but i soon realised that i didn't want
+any features that required a backend (no comments, likes, etc) and instead i turned my head towards projects like <a href="https://gohugo.io/">HUGO</a> that generate
+that only focus on generating the static content that can simply be hosted using static website hosting like <a href="https://pages.github.com/">Github Pages</a> which is what I use for this site.
+Inspired by HUGO I set out to create my own static site generation framework in rust. The framework is still very much in progress but it has come to the point where I was able to create this blog using it,
+and so I decided that I'm going to document the development starting today.</p>
+<p>So far the project includes a couple of dependencies and a single rust binary crate.
+In the future I intend to split this file up to seperate the concerns of the framework but for now I'm still experimenting and
+I am not concerned of writing "good code" since I will refoactor everything later anyways.</p>
+<p>Let's talk about the dependencies. To me it's important that I know what purpose each of my direct dependencies have and that
+I don't use big dependencies with a lot off features that I'm not going to use. The dependencies I've added so far are as follows</p>
+<pre><code>[dependencies]
+  pulldown-cmark = "0.11.0"
+  handlebars = "5.1.2"
+  yaml-front-matter = "0.1.0"
+  serde = "1.0.204"
+  serde_json = "1.0.120"
+</code></pre>
+<p>Each of these dependencies have their own responsibility in the project. In this case handlebars allows me to use
+html templating, pulldown-cmark helps me parse the markdown and yaml-front-matter is used to retrieve the
+metadata of my markdown that I can parse using serde and serde_json.</p>
+</div>
+</div>
+  </body>
+</html>

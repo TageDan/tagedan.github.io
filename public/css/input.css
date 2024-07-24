@@ -5,27 +5,27 @@
 
 @layer base {
   body {
-    @apply bg-slate-900 text-gray-200 p-2 w-full;
+    @apply bg-slate-900 text-gray-200 w-full;
 
   }
   
   h1 {
-    @apply text-4xl;
+    @apply text-4xl py-2;
   }
   h2 {
-    @apply text-3xl;
+    @apply text-3xl py-2;
   }
   h3 {
-    @apply text-2xl;
+    @apply text-2xl py-2;
   }
   h4 {
-    @apply text-xl;
+    @apply text-xl py-2;
   }
   p {
-    @apply text-lg;
+    @apply text-lg  py-2;
   }
   ul {
-    @apply list-inside;
+    @apply list-inside py-2;
   }
   li {
     @apply list-disc;
@@ -34,9 +34,9 @@
     @apply text-cyan-400;
   }
   img {
-    @apply max-w-[80%] border-gray-700 border-2;
+    @apply max-w-[80%] border-gray-700 border-2 py-2;
   }
-  code{
-    @apply border-gray-700 border-2 border-l-8 p-2;
+  pre{
+    @apply border-gray-700 border-2 border-l-8 py-2 pl-3;
   }
 }
