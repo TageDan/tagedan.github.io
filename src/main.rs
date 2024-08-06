@@ -1,13 +1,13 @@
 // used for parsing metadata
-use serde::{de::DeserializeOwned, Deserialize};
+use serde::{de::DeserializeOwned, Deserialize, Serialize};
 use yaml_front_matter::YamlFrontMatter;
 
 // used for parsing markdown
 use pulldown_cmark::{Options, Parser};
 
 // used for templating
-use handlebars::Handlebars;
-use serde_json::json;
+use handlebars::{to_json, Handlebars};
+use serde_json::{json, Value as Json};
 
 use std::{
     collections::HashMap,
@@ -17,7 +17,7 @@ use std::{
 };
 
 // Setting metadata paramaters
-#[derive(Deserialize)]
+#[derive(Deserialize, Serialize)]
 struct Metadata {
     title: String,
     author: String,
@@ -26,70 +26,55 @@ struct Metadata {
     date: String,
 }
 
-struct SiteGenerator {
+struct MarkdownSiteGenerator {
     content: PathBuf,
     templates: PathBuf,
     output: PathBuf,
 }
 
-impl SiteGenerator {
-    fn new() -> Self {
+impl Default for MarkdownSiteGenerator {
+    fn default() -> Self {
         Self {
             content: Path::new("./content").to_owned(),
             templates: Path::new("./templates").to_owned(),
             output: Path::new("./public").to_owned(),
         }
     }
+}
 
-    fn set_content_dir<S>(&self, path: &S) -> Self
+impl MarkdownSiteGenerator {
+    fn with_dirs<S>(content: Option<&S>, templates: Option<&S>, output: Option<&S>) -> Self
     where
         S: AsRef<OsStr>,
     {
-        let &Self {
-            content: _,
-            templates,
-            output,
-        } = &self;
-        let templates = templates.clone();
-        let output = output.clone();
+        let (content, templates, output) = (
+            {
+                if let Some(x) = content {
+                    Path::new(x).to_owned()
+                } else {
+                    Self::default().content
+                }
+            },
+            {
+                if let Some(x) = templates {
+                    Path::new(x).to_owned()
+                } else {
+                    Self::default().templates
+                }
+            },
+            {
+                if let Some(x) = output {
+                    Path::new(x).to_owned()
+                } else {
+                    Self::default().output
+                }
+            },
+        );
+
         Self {
-            content: Path::new(path).to_owned(),
-            templates,
-            output,
-        }
-    }
-    fn set_template_dir<S>(&self, path: &S) -> Self
-    where
-        S: AsRef<OsStr>,
-    {
-        let &Self {
-            content,
-            templates: _,
-            output,
-        } = &self;
-        let content = content.clone();
-        let output = output.clone();
-        Self {
-            templates: Path::new(path).to_owned(),
-            content,
-            output,
-        }
-    }
-    fn set_output_dir<S>(&self, path: &S) -> Self
-    where
-        S: AsRef<OsStr>,
-    {
-        let &Self {
             content,
             templates,
-            output: _,
-        } = &self;
-        let content = content.clone();
-        let templates = templates.clone();
-        Self {
-            templates,
-            content,
-            output: Path::new(path).to_owned(),
+            output,
         }
     }
 
@@ -125,7 +110,7 @@ impl SiteGenerator {
             let content = handlebars
                 .render_template(
                     &templates.get("post").unwrap(),
-                    &json!({"title": title, "author": author, "date": date, "content": html }),
+                    &json!({"title": title, "author": author,  "content": html }),
                 )
                 .unwrap();
 
@@ -159,7 +144,38 @@ impl SiteGenerator {
             templates.insert(file_name, html_string);
         }
     }
+
+    fn add_file_path(&self, arg: &str, content_metadata_list: impl Render) -> Self {
+        todo!()
+    }
+
+    fn add_markdown_path(&self) -> Self {
+        todo!()
+    }
 }
+
+trait Render {}
+
+impl<C> Render for (&str, C) where C: Render {}
+
+impl Render for &str {}
+
+impl Render for (&str, Json) {}
+
+fn merge(a: &mut Json, b: &Json) {
+    match (a, b) {
+        (&mut Json::Object(ref mut a), &Json::Object(ref b)) => {
+            for (k, v) in b {
+                merge(a.entry(k.clone()).or_insert(Json::Null), v);
+            }
+        }
+        (a, b) => {
+            *a = b.clone();
+        }
+    }
+}
+
+impl<C> Render for (&str, Json, C) where C: Render {}
 
 fn parse_markdown(md_file: fs::DirEntry) -> (String, String) {
     let md = read_to_string(md_file.path()).unwrap();
@@ -170,15 +186,30 @@ fn parse_markdown(md_file: fs::DirEntry) -> (String, String) {
     (html, md)
 }
 
-fn main() {
-    let mut generator = SiteGenerator::new().set_content_dir(&"./posts");
-    generator.generate();
-}
-
 fn get_metadata<T>(md: String) -> T
 where
     T: DeserializeOwned,
 {
     let result = YamlFrontMatter::parse::<T>(&md).unwrap();
     result.metadata
+}
+
+fn get_all_metadata<T>() -> Vec<T> {
+    todo!()
+}
+
+fn main() {
+    let mut generator = MarkdownSiteGenerator::default()
+        .add_file_path(
+            "index",
+            (
+                "base",
+                json!({"title": "Blog"}),
+                (
+                    "index",
+                    ("post_list", json!({"posts":get_all_metadata::<Metadata>()})),
+                ),
+            ),
+        )
+        .add_markdown_path();
 }

@@ -9,6 +9,7 @@ tags:
   - "handlebars"
   - "static site generation"
   - "markdown"
+name: "Hej, test"
 ---
 
 I've wanted to have my own personal website/blog for a while. 
