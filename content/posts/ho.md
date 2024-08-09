@@ -8,7 +8,7 @@ tags:
  - "html"
  - "handlebars"
  - "static site"
-path: "blog/posts/ho.html"
+path: "posts/ho.html"
 ---
 
 # Hi
