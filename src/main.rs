@@ -23,6 +23,7 @@ struct Metadata {
     description: String,
     tags: Vec<String>,
     date: String,
+    path: String,
 }
 
 struct MarkdownSiteGenerator {
