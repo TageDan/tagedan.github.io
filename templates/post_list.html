@@ -1,0 +1,11 @@
+<div class="gap-5">
+  {{#each posts}}
+  <div class="p-2 border rounded-2xl">
+    <a href="{{ path }}" class="text-xl">{{title}}</a>
+    <div>{{date}}</div>
+    <div>{{author}}</div>
+    <div>----------</div>
+    <div>{{description}}</div>
+  </div>
+  {{/each}}
+</div>
