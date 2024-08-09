@@ -16,7 +16,7 @@ struct Metadata {
 fn main() {
     generator::MarkdownSiteGenerator::default()
         .add_file_path(
-            "index",
+            "blog",
             (
                 "base",
                 json!({"title": "Blog"}),
@@ -29,5 +29,6 @@ fn main() {
                 ),
             ),
         )
-        .add_content_folder_path::<Metadata>("posts/", ("base", "post"));
+        .add_content_folder_path::<Metadata>("posts/", ("base", "post"))
+        .add_file_path("index", ("base", json!({"title": "TageDan"}), ("index")));
 }
