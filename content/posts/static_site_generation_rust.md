@@ -1,7 +1,7 @@
 ---
 title: "Static Site Generation using Rust"
 author: "Tage Danielsson"
-description: "Using rust to generate static html"
+description: "How I made my own framework to generate the static pages on this site using rust"
 date: "2024-07-12"
 tags:
   - "rust"
@@ -12,36 +12,79 @@ tags:
 path: "/posts/static_site_generation_rust.html"
 ---
 
-I've wanted to have my own personal website/blog for a while. 
-I enjoy making projects in my spare time but since I put so much time into making them I thought it would help me to share the process.
-I also wanted a space where i could write about my other intrests like running, fishing, maths and traveling. 
-Last but not least I wanted to have a portfolio for my projects.
+I have for a long time wanted to build a website where I could have my own blog and project portfolio.
+To acheive this the first thing that came to mind was to spin up a fast server in python (since I have some 
+experience using flask) and than host it with something like python anywhere. 
+But then I realised that the site I wanted to create (this site) barely needed any interactivity
+and it would be unneccesary too write a server for it. Instead I looked into static site generation tools like
+[HUGO](https://gohugo.io/) since I knew i wanted to easely be able to convert markdown content into static pages
+wich I could then host using a static-site-server (something like [Github Pages](https://pages.github.com/)).
+I decided that this would be a little bit boring since it seemed to easy. Instead I wanted to create my own 
+static site generation framework called stat-site-framework using my very favorite language rust.
 
-Getting started building the site I knew that I wanted to use rust. It has been my prefered language for about a year and I really enjoy learning it.
-In the begining I looked at using axum to build a server that would serve my html and handle backend-logic but i soon realised that i didn't want 
-any features that required a backend (no comments, likes, etc) and instead i turned my head towards projects like [HUGO](https://gohugo.io/) that generate 
-that only focus on generating the static content that can simply be hosted using static website hosting like [Github Pages](https://pages.github.com/) which is what I use for this site.
-Inspired by HUGO I set out to create my own static site generation framework in rust. The framework is still very much in progress but it has come to the point where I was able to create this blog using it, 
-and so I decided that I'm going to document the development starting today.
-
-So far the project includes a couple of dependencies and a single rust binary crate. 
-In the future I intend to split this file up to seperate the concerns of the framework but for now I'm still experimenting and 
-I am not concerned of writing "good code" since I will refoactor everything later anyways.
-
-Let's talk about the dependencies. To me it's important that I know what purpose each of my direct dependencies have and that 
-I don't use big dependencies with a lot off features that I'm not going to use. The dependencies I've added so far are as follows
-
+That was all the backstory to how this started. Next up, let's talk dependencies! 
+I am a strong believer that in most cases it's best to choose dependencies that are 
+specialized on the one task that you want it to do for you. This way you know why you're 
+using the dependencies you're using and you know when to reach for them. You also reduce 
+your applications overhead and compile times by choosing smaller specialized dependencies.
+That said the dependencies I chose were:
 ```
 [dependencies]
-  pulldown-cmark = "0.11.0"
-  handlebars = "5.1.2"
-  yaml-front-matter = "0.1.0"
-  serde = "1.0.204"
-  serde_json = "1.0.120"
+  pulldown-cmark = "0.11.0" # used to parse markdown files into html
+  handlebars = "5.1.2" # templating engine for generating html
+  yaml-front-matter = "0.1.0" # Used for extracting metadata from markdown files
+  serde = "1.0.204" # Used for Serializing and Deserializing metadata and json data
+  serde_json = "1.0.120" # used to handle json data (required by handlebars)
 ```
 
-Each of these dependencies have their own responsibility in the project. In this case handlebars allows me to use 
-html templating, pulldown-cmark helps me parse the markdown and yaml-front-matter is used to retrieve the 
-metadata of my markdown that I can parse using serde and serde_json.
+Now let's look at how you might use the framework to get a better Idea of 
+what structures and functions this framework provides and what the api looks like.
+This is the code (rust code) for this website:
+``` 
+use serde::{Deserialize, Serialize};
+use serde_json::json;
+use stat_site_framework::*;
 
+// Post metadata
+#[derive(Deserialize, Serialize)]
+struct Metadata {
+    title: String,
+    author: String,
+    description: String,
+    tags: Vec<String>,
+    date: String,
+    path: String,
+}
+
+fn main() {
+    generator::MarkdownSiteGenerator::default()
+        .add_file_path(
+            "blog",
+            (
+                "base",
+                json!({"title": "Blog"}),
+                (
+                    "blog",
+                    (
+                        "post_list",
+                        json!({"posts": markdown_utils::get_all_metadata::<Metadata>("./content/posts")}),
+                    ),
+                ),
+            ),
+        )
+        .add_content_folder_path::<Metadata>("posts/", ("base", "post"))
+        .add_file_path("index", ("base", json!({"title": "TageDan"}), ("index")))
+        .add_file_path("portfolio", ("base", json!({"title": "TageDan"}), ("index")));
+}
+```
+And the file structure looks something like this:
+
+* blog/
+    * src/
+        * main.rs
+    * content/
+        * posts/
+            * (markdown content files)
+    * public/
+        * (outputed static files)
 

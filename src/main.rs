@@ -2,7 +2,7 @@ use serde::{Deserialize, Serialize};
 use serde_json::json;
 use stat_site_framework::*;
 
-// Setting metadata paramaters
+// Post metadata
 #[derive(Deserialize, Serialize)]
 struct Metadata {
     title: String,
@@ -21,7 +21,7 @@ fn main() {
                 "base",
                 json!({"title": "Blog"}),
                 (
-                    "index",
+                    "blog",
                     (
                         "post_list",
                         json!({"posts": markdown_utils::get_all_metadata::<Metadata>("./content/posts")}),
@@ -30,5 +30,6 @@ fn main() {
             ),
         )
         .add_content_folder_path::<Metadata>("posts/", ("base", "post"))
-        .add_file_path("index", ("base", json!({"title": "TageDan"}), ("index")));
+        .add_file_path("index", ("base", json!({"title": "TageDan"}), ("index")))
+        .add_file_path("portfolio", ("base", json!({"title": "TageDan"}), ("index")));
 }

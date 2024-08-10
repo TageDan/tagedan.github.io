@@ -30,6 +30,9 @@
   li {
     @apply list-disc;
   }
+  li > ul {
+    @apply ml-5
+  }
   a {
     @apply text-cyan-400;
   }
@@ -37,6 +40,6 @@
     @apply max-w-[80%] border-gray-700 border-2 py-2;
   }
   pre{
-    @apply border-gray-700 border-2 border-l-8 py-2 pl-3;
+    @apply border-gray-700 border-2 border-l-8 py-2 pl-3 overflow-x-auto;
   }
 }
