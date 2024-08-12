@@ -42,4 +42,7 @@
   pre{
     @apply border-gray-700 border-2 border-l-8 py-2 pl-3 overflow-x-auto;
   }
+  
+
+
 }
