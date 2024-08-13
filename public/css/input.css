@@ -19,7 +19,7 @@
     @apply text-2xl py-2 lg:text-3xl xl:text-4xl;
   }
   p {
-    @apply text-lg  py-2;
+    @apply text-base lg:text-lg  py-2;
   }
   ul {
     @apply list-inside py-2;
