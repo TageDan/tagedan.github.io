@@ -100,7 +100,7 @@ And the file structure looks something like this:
 
 On the first three lines we import our dependencies. Once again were using serde/serde_json to handle our data.
 We also import * (which means everything basically) from stat_site_framework. Then we define two datatypes,
-these are the datatypes that the markdown metadata will be passed into, hence the '#[derive(Deserialize, Serialize)]'.
+these are the datatypes that the markdown metadata will be passed into, hence the `#[derive(Deserialize, Serialize)]`.
 Now we enter the main function. Here we construct a MarkdownSiteGenerator struct with default parameters to 
 generate our pages. Let's take a closer look at that struct now.
 ```rust
@@ -146,8 +146,8 @@ markdown file. Take a look at the first method we call on the generator:
 This method call might look really weird. It starts by taking in a string which will 
 be the subpath to the outputted html in the output directory (in this case base.html in ./public).
 Then comes the weird part, this is where the magic happens, by nesting these tuples we can define a 
-rendering hierarchy. The result of a nested tuple will be rendered in place of '{{{ content }}}' 
-in the template with the same name as the leading string in the tuple. For example:
+rendering hierarchy. The result of a nested tuple will be rendered replacing the `{{{ content }}}`
+placeholder of the template with the same name as the leading string in the tuple. For example:
 
 These files located in the template directory:
 ```html
@@ -194,12 +194,13 @@ Would output the file:
 
 Tell me that's not cool, I mean it's simple but still a really nice way to define your 
 rendering in my opinion. But how does it work? 
-Well, it really doesn't have to do with anything unique about tuples. The only reason 
-that this type of tuple structure works is becuase I've implemented the rendering method for it. That is the real 
+Well, it really doesn't have to do with anything unique to tuples. The only reason 
+that this type of tuple structure works is becuase I've implemented the Render trait for it. That is the real 
 magic of this framework, it's really extendible (at least in theory, haven't done that much yet).
-The second method argument accepts anything that implements the render trait which means that you can
+The second method argument accepts anything that implements the Render trait which means that you can
 define any structure and then define any implementation for rendering it and you will be 
-able to pass it to the function directly or in the middle of the nested tuples. That's the power of rust's traits.
+able to pass it to the function directly or in the middle of the nested tuples. 
+That's the power of rust's traits.
 
 Let's look at how I decided to implement the render trait for the tuple structure.
 ```rust

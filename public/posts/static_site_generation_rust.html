@@ -1,7 +1,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=, initial-scale=" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title></title>
     <link rel="stylesheet" href="/css/highlight.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
@@ -22,14 +22,14 @@
       <a href="/portfolio.html">Portfolio</a>
     </div>
     <div><div class="border-b py-2 flex justify-center">
-  <div class="w-3/4 lg:w-2/3">
-    <div class="text-6xl">Static Site Generation using Rust</div>
-    <h5>Author: Tage Danielsson</h5>
-    <h5>Date: 2024-08-12</h5>
+  <div class="w-3/4 lg:w-1/2">
+    <h1>Static Site Generation using Rust</h1>
+    <span>Author: Tage Danielsson</span>
+    <span>Date: 2024-08-12</span>
   </div>
 </div>
 <div class="w-full flex justify-center">
-  <div class="py-2 w-3/4 lg:w-2/3"><p>I have for a long time wanted to build a website where I could have my own blog and project portfolio.
+  <div class="py-2 w-3/4 lg:w-1/2"><p>I have for a long time wanted to build a website where I could have my own blog and project portfolio.
 To acheive this the first thing that came to mind was to spin up a fast server in python (since I have some
 experience using <a href="https://flask.palletsprojects.com/en/3.0.x/">flask</a>) and then host it using something like <a href="https://www.pythonanywhere.com">python anywhere</a>.
 I realised that the site I wanted to create (this site) barely needed any interactivity
@@ -128,7 +128,7 @@ fn main() {
 </ul>
 <p>On the first three lines we import our dependencies. Once again were using serde/serde_json to handle our data.
 We also import * (which means everything basically) from stat_site_framework. Then we define two datatypes,
-these are the datatypes that the markdown metadata will be passed into, hence the '#[derive(Deserialize, Serialize)]'.
+these are the datatypes that the markdown metadata will be passed into, hence the <code>#[derive(Deserialize, Serialize)]</code>.
 Now we enter the main function. Here we construct a MarkdownSiteGenerator struct with default parameters to
 generate our pages. Let's take a closer look at that struct now.</p>
 <pre><code class="language-rust">pub struct MarkdownSiteGenerator {
@@ -171,8 +171,8 @@ markdown file. Take a look at the first method we call on the generator:</p>
 <p>This method call might look really weird. It starts by taking in a string which will
 be the subpath to the outputted html in the output directory (in this case base.html in ./public).
 Then comes the weird part, this is where the magic happens, by nesting these tuples we can define a
-rendering hierarchy. The result of a nested tuple will be rendered in place of '{{{ content }}}'
-in the template with the same name as the leading string in the tuple. For example:</p>
+rendering hierarchy. The result of a nested tuple will be rendered replacing the <code>{{{ content }}}</code>
+placeholder of the template with the same name as the leading string in the tuple. For example:</p>
 <p>These files located in the template directory:</p>
 <pre><code class="language-html">&lt;!-- (base.html) --&gt;
 
@@ -212,12 +212,13 @@ in the template with the same name as the leading string in the tuple. For examp
 </code></pre>
 <p>Tell me that's not cool, I mean it's simple but still a really nice way to define your
 rendering in my opinion. But how does it work?
-Well, it really doesn't have to do with anything unique about tuples. The only reason
-that this type of tuple structure works is becuase I've implemented the rendering method for it. That is the real
+Well, it really doesn't have to do with anything unique to tuples. The only reason
+that this type of tuple structure works is becuase I've implemented the Render trait for it. That is the real
 magic of this framework, it's really extendible (at least in theory, haven't done that much yet).
-The second method argument accepts anything that implements the render trait which means that you can
+The second method argument accepts anything that implements the Render trait which means that you can
 define any structure and then define any implementation for rendering it and you will be
-able to pass it to the function directly or in the middle of the nested tuples. That's the power of rust's traits.</p>
+able to pass it to the function directly or in the middle of the nested tuples.
+That's the power of rust's traits.</p>
 <p>Let's look at how I decided to implement the render trait for the tuple structure.</p>
 <pre><code class="language-rust">pub trait Render {
     fn render(&amp;self, template_folder: &amp;Path) -&gt; String;

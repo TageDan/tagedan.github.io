@@ -461,11 +461,39 @@ h1 {
   line-height: 2.5rem;
 }
 
+@media (min-width: 1024px) {
+  h1 {
+    font-size: 3rem;
+    line-height: 1;
+  }
+}
+
+@media (min-width: 1280px) {
+  h1 {
+    font-size: 3.75rem;
+    line-height: 1;
+  }
+}
+
 h2 {
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
   font-size: 1.875rem;
   line-height: 2.25rem;
+}
+
+@media (min-width: 1024px) {
+  h2 {
+    font-size: 2.25rem;
+    line-height: 2.5rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  h2 {
+    font-size: 3rem;
+    line-height: 1;
+  }
 }
 
 h3 {
@@ -475,11 +503,18 @@ h3 {
   line-height: 2rem;
 }
 
-h4 {
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
-  font-size: 1.25rem;
-  line-height: 1.75rem;
+@media (min-width: 1024px) {
+  h3 {
+    font-size: 1.875rem;
+    line-height: 2.25rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  h3 {
+    font-size: 2.25rem;
+    line-height: 2.5rem;
+  }
 }
 
 p {
@@ -726,11 +761,6 @@ pre {
   line-height: 2.25rem;
 }
 
-.text-6xl {
-  font-size: 3.75rem;
-  line-height: 1;
-}
-
 .text-xl {
   font-size: 1.25rem;
   line-height: 1.75rem;
@@ -747,6 +777,10 @@ pre {
 }
 
 @media (min-width: 1024px) {
+  .lg\:w-1\/2 {
+    width: 50%;
+  }
+
   .lg\:w-2\/3 {
     width: 66.666667%;
   }
