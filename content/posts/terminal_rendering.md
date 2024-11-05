@@ -35,9 +35,9 @@ terminal-renderer
 +-- src
 |   +-- lib.rs
 |   +-- main.rs
-|   +-- math.rs
+|   +-- math
 |   |   +-- mod.rs
-|   +-- renderer.rs
+|   +-- renderer
 |   |   +-- mod.rs
 ```
 
