@@ -1,6 +1,60 @@
-<div class="w-full flex justify-center">
-  <div class="w-2/3">
-    <div class="w-full text-center border-b"><h1>The Blog</h1></div>
-    <div class="w-full">{{{ content }}}</div>
+<script>
+
+base_terminal_state.path = "/blog";
+
+
+base_terminal_state.commands = 
+[...base_terminal_state.commands,
+    {
+      call: "show post_list.md",
+      out: `
+        <h1>The Blog</h1>
+<div>
+  {{#each posts}}
+  <div>
+    <a href="{{ path }}">
+    <h1>{{title}}</h1>
+    </a>
+    <div> + {{date}}</div>
+    <div> + {{author}}</div>
+    <div> + {{description}}</div>
   </div>
+  {{/each}}
 </div>
+        ` 
+    }
+    ];
+
+base_terminal_state.special_command = 
+    {
+      call: "show post_list.md",
+      out: `
+        <h1>The Blog</h1>
+<div>
+  {{#each posts}}
+  <div>
+    <a href="{{ path }}">
+    <h1>{{title}}</h1>
+    </a>
+    <div> + {{date}}</div>
+    <div> + {{author}}</div>
+    <div> + {{description}}</div>
+  </div>
+  {{/each}}
+</div>
+        ` 
+    }
+  ;
+
+base_terminal_state.available_files = [
+  { name: "..", path: "/" },
+  { name: ".", path: "/blog.html" },
+  {name:"post_list.md", path:"FILE"},
+{{#each posts}}
+  {name: "{{name}}", path: "{{path}}"},
+{{/each}}
+];
+
+set_state()
+
+</script>

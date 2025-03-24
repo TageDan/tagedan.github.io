@@ -3,26 +3,39 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+    font-family: "FixedCourier";
+    src: local("Courier New");
+}
+
+
 @layer base {
   body {
-    @apply bg-slate-900 text-gray-200 w-full;
+    @apply bg-black text-gray-200 w-full pl-5 md:text-sm lg:text-base;
+/* font-family: "DejaVu Sans Mono", FixedCourier, monospace; */
+  }
 
+  p {
+    @apply mb-[1em] 
   }
   
   h1 {
-    @apply text-4xl lg:text-5xl py-2 xl:text-6xl;
+    @apply font-bold;
   }
-  h2 {
-    @apply text-3xl py-2 lg:text-4xl xl:text-5xl;
+  h1::before{
+    content: "# "
   }
-  h3 {
-    @apply text-2xl py-2 lg:text-3xl xl:text-4xl;
+  h2::before {
+    content: "## "
   }
-  p {
-    @apply text-base lg:text-lg  py-2;
+  h2 {    
+    @apply font-semibold;
   }
+  h3::before {
+    content: "### "
+    }
   ul {
-    @apply list-inside py-2;
+    @apply list-inside mb-[1em];
   }
   li {
     @apply list-disc;
@@ -31,15 +44,23 @@
     @apply ml-5
   }
   a {
-    @apply text-cyan-400;
+    @apply text-blue-500;
   }
   img {
-    @apply max-w-[80%] border-gray-700 border-2 py-2;
+    @apply max-w-[80%] border-gray-700 border-2;
   }
-  pre{
-    @apply border-gray-700 border-2 border-l-8 py-2 pl-3 overflow-x-auto;
+  pre {
+    @apply my-[1em] overflow-x-auto;
   }
+
+
   
-
-
+  pre::before{
+    content: "```";
+    display: block;
+  }
+  pre::after{
+    content: "```";
+    display: block;
+  }
 }

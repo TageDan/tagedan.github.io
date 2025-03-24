@@ -1,0 +1,254 @@
+<html lang="en">
+  <head>
+    <!-- Google tag (gtag.js) -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-0850QBCD1V"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+
+      gtag("config", "G-0850QBCD1V");
+    </script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title></title>
+    <link rel="stylesheet" href="/css/highlight.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/go.min.js"></script>
+
+    <script>
+      hljs.highlightAll();
+      window.addEventListener("load", () => {
+    setTimeout(() => {window.scrollTo(0,0); console.log("hi")}, 50);
+        
+      })
+
+
+      function update_headers() {
+        for (h_tag in document.querySelectorAll("h1")) {
+          
+        }
+      }
+    </script>
+    <link href="/css/output.css" rel="stylesheet" />
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  </head>
+
+  <body>
+<script>
+
+
+  let base_terminal_state = {
+    commands: [
+    {
+      call: "list ~",
+      out: `
+        <div class = "flex gap-2">
+        <a href="/index.html">.</a>
+        <a href="/blog.html">blog</a>
+        <a href="/portfolio.html">portfolio</a>
+        <a href="/problems.html">weekly_problems</a>
+        intro.md
+        </div>
+      `
+    },
+    ],
+    available_files: [],
+    special_command: {
+      call: "",
+      out: ""
+    },
+    path: "",
+    current_command: "goto",
+
+    handle() {
+      console.log(this.current_command)
+      let com = this.current_command
+      let out = ""
+      this.current_command = ""
+
+      if (com == "list ~") {
+      out = `
+        <div class = "flex gap-2">
+        <a href="/index.html">.</a>
+        <a href="/blog.html">blog</a>
+        <a href="/portfolio.html">portfolio</a>
+        <a href="/problems.html">weekly_problems</a>
+        intro.md
+        </div>
+      `
+      }
+      //ls
+      if (com == "list") {
+        out = `
+        <div class = "flex gap-2 w-full flex-wrap">
+          <template x-for="file in available_files">
+            <div>
+              <template x-if="file.path != 'FILE'">
+                <a x-bind:href="file.path" x-text='file.name'>
+              </template>
+              <template x-if="file.path == 'FILE'">
+                <div x-text='file.name'></div>
+              </template>
+            </div>
+          </template>
+        </div>
+        ` 
+      }
+      if (com == this.special_command.call) {
+        out = this.special_command.out
+      }
+      if (com == "help") {
+        out = `
+          <div>
+            <p>help - display this help message </p>
+            <p>list - list files and directories</p>
+            <p>goto <directory> - goto directory (. is this directory and .. is the parent directory)</p>
+            <p>show <file> - show file contents</p>
+          </div>
+        `
+      }
+      let com_parts = com.split(" ");
+      if (com_parts[0] == "goto") {
+        if (com_parts.length == 1 || com_parts[1].trim() == "") {
+          window.location.href = "/"
+        }
+        for (i in this.available_files) {
+          if (this.available_files[i].name == com_parts[1].trim()) {
+            window.location.href = this.available_files[i].path
+          }
+        }
+        
+      }
+      this.commands = [...this.commands, {
+      call:com,
+      out: out,
+      }]
+      setTimeout(() => {      hljs.highlightAll();}, 50);
+      
+    },
+
+
+}
+
+function set_state() {
+  
+document.addEventListener('alpine:init', () => {
+  Alpine.data('terminal_state', () => (
+  base_terminal_state
+))
+})
+}
+</script>
+    <script>
+
+base_terminal_state.path = "/blog/cpu_profiling_using_flamegraphs";
+
+base_terminal_state.commands = [...base_terminal_state.commands, {
+  call: "show post.md"
+  ,out: `
+  <div class="sm:px-none w-full sm:w-3/4 lg:w-1/2">
+    <h1>Fantastic Flamegraphs</h1>
+    <span>Author: Tage Danielsson</span>
+    <span>Date: 2024-12-27</span>
+    <p>=========================</p>
+
+  </div>
+<div class="w-full flex">
+  <div class="sm:px-none w-full  sm:w-3/4 lg:w-1/2">
+    <h2>Intro</h2>
+<p>Lately I have been building a <a href="https://github.com/TageDan/Chlang">project</a> for which I needed a chess engine. I decided to make it my
+very own by building the board representation from scratch. But after finishing the basic representation to make it possible to play games I soon realised I had a <em>BIG</em> performance problem. Some games would even cause my computer to crash. This felt like the perfect time to test out a tool I've been wanting to try: <em><a href="https://github.com/flamegraph-rs/flamegraph">Flamegraph</a></em></p>
+<h2>What is a flamegraph</h2>
+<p>A flamegraph is a chart over the different stackframes encountered in a program. It can help you to visualize how your program runs and highlight the bottlenecks.
+Each bar in the chart represents a stack frame (basically a function) in your program and the wider bar under it is it's parent (the function which called this function).
+The width of each box represents how much of the total time of the program was spent in that function. The "app" stackframe is therefore 100% of the width becuase it covers the whole program. If 50% of the program is spent inside some function then that box will be half of the charts width.</p>
+<p>An example of a flamechart could look like this.
+<img src="" alt="MySQL Flamechart" /></p>
+<h2>How did I use flamegraphs</h2>
+<p>As I said My board representation was really slow and to find out why I wanted to use flamegraph.
+First of I created a benchmark using another great tool, <a href="https://github.com/sharkdp/hyperfine">hyperfine</a> and this is what i got.</p>
+<ul>
+<li>Benchmark 1: 456.5 ± 14.1 ms (over 10 runs)</li>
+</ul>
+<p>And then I ran <code>cargo flamegraph</code> to produce my chart which came out like this:
+<img src="" alt="My first flamechart" /></p>
+
+  </div>
+</div>
+    
+  `
+}];
+
+base_terminal_state.special_command = {
+  call: "show post.md"
+  ,out: `
+  <div class="sm:px-none w-full sm:w-3/4 lg:w-1/2">
+    <h1>Fantastic Flamegraphs</h1>
+    <span>Author: Tage Danielsson</span>
+    <span>Date: 2024-12-27</span>
+    <p>=========================</p>
+
+  </div>
+<div class="w-full flex">
+  <div class="sm:px-none w-full  sm:w-3/4 lg:w-1/2">
+    <h2>Intro</h2>
+<p>Lately I have been building a <a href="https://github.com/TageDan/Chlang">project</a> for which I needed a chess engine. I decided to make it my
+very own by building the board representation from scratch. But after finishing the basic representation to make it possible to play games I soon realised I had a <em>BIG</em> performance problem. Some games would even cause my computer to crash. This felt like the perfect time to test out a tool I've been wanting to try: <em><a href="https://github.com/flamegraph-rs/flamegraph">Flamegraph</a></em></p>
+<h2>What is a flamegraph</h2>
+<p>A flamegraph is a chart over the different stackframes encountered in a program. It can help you to visualize how your program runs and highlight the bottlenecks.
+Each bar in the chart represents a stack frame (basically a function) in your program and the wider bar under it is it's parent (the function which called this function).
+The width of each box represents how much of the total time of the program was spent in that function. The "app" stackframe is therefore 100% of the width becuase it covers the whole program. If 50% of the program is spent inside some function then that box will be half of the charts width.</p>
+<p>An example of a flamechart could look like this.
+<img src="" alt="MySQL Flamechart" /></p>
+<h2>How did I use flamegraphs</h2>
+<p>As I said My board representation was really slow and to find out why I wanted to use flamegraph.
+First of I created a benchmark using another great tool, <a href="https://github.com/sharkdp/hyperfine">hyperfine</a> and this is what i got.</p>
+<ul>
+<li>Benchmark 1: 456.5 ± 14.1 ms (over 10 runs)</li>
+</ul>
+<p>And then I ran <code>cargo flamegraph</code> to produce my chart which came out like this:
+<img src="" alt="My first flamechart" /></p>
+
+  </div>
+</div>
+    
+  `
+};
+
+
+base_terminal_state.available_files = [
+  {name: "..", path: "/blog.html"},
+  {name: ".", path: "/blog/cpu_profiling_using_flamegraphs.html"},
+  {name: "post.md", path:"FILE"}
+]
+
+set_state()
+</script>
+
+
+
+    <div x-data="terminal_state">
+    <template x-for="command in commands">
+      <div>
+      <span class = "font-bold flex flex-row gap-1"><div class="text-green-500">tage@site:~<span x-text="path"></span>$ </div><div x-text="command.call"></div></span>
+
+      <div class = "" x-html='command.out'>
+      </div>
+    </div>
+    </template>
+      <span class = "font-bold flex flex-row gap-1"><div class="text-green-500">tage@site:~<span x-text="path"></span>$ </div>
+      <form @submit.prevent="handle">
+      <input class = "bg-black text-white font-bold outline-0" id="term" x-model="current_command" onblur="this.focus()" autofocus autocomplete="off">
+      </form>
+      </span>
+    
+    </div>
+  </body>
+</html>

@@ -1,11 +1,44 @@
-<div class="w-full flex justify-center">
-  <div class="w-3/4 lg:w-2/3 text-center">
-    <h1>Hi, My name is Tage Danielsson</h1>
-    <h2>Welcome to my personal website</h2>
-    <p>
-      This is where I <a href="/portfolio.html">showcase my projects</a> and
-      keep my <a href="/blog.html">blog</a>. I'm glad to see you here :)
-    </p>
-    <p>checkout my <a href="https://github.com/TageDan">github</a></p>
-  </div>
-</div>
+<script>
+
+base_terminal_state.commands = 
+[...base_terminal_state.commands,
+    {
+      call: "show intro.md",
+      out: `
+        <h1>Hi, My name is Tage Danielsson</h1>
+        <h2>Welcome to my personal website</h2>
+        <p>This is where I <a href="/portfolio.html">showcase my projects</a> and
+        keep my <a href="/blog.html">blog</a>. I\'m glad to see you here :)
+        </p>
+        <p>I also try to publish <a href="/problems.html">weekly problems</a>!
+        <p>checkout my <a href="https://github.com/TageDan">github</a></p>
+        <p>tip: use "help" to list available commands.</p>
+        ` 
+    }
+    ];
+
+base_terminal_state.available_files = [
+  { name: ".", path: "/" },
+  {name:"blog", path:"/blog.html"},
+  {name:"portfolio", path:"/portfolio.html"},
+  {name:"problems", path:"/problems.html"}, 
+  {name:"intro.md", path:"FILE"},
+]
+
+base_terminal_state.special_command = {
+  call: "show intro.md",
+  out: `
+        <h1>Hi, My name is Tage Danielsson</h1>
+        <h2>Welcome to my personal website</h2>
+        <p>This is where I <a href="/portfolio.html">showcase my projects</a> and
+        keep my <a href="/blog.html">blog</a>. I\'m glad to see you here :)
+        </p>
+        <p>checkout my <a href="https://github.com/TageDan">github</a></p>
+        <p>tip: use "help" to list available commands.</p>
+        `
+  
+}
+
+set_state()
+
+</script>

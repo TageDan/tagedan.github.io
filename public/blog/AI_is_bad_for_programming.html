@@ -25,10 +25,16 @@
     <script>
       hljs.highlightAll();
       window.addEventListener("load", () => {
-    console.log("ha")
-    setTimeout(() => {window.scrollTo(0,0); console.log("hi")});
+    setTimeout(() => {window.scrollTo(0,0); console.log("hi")}, 50);
         
       })
+
+
+      function update_headers() {
+        for (h_tag in document.querySelectorAll("h1")) {
+          
+        }
+      }
     </script>
     <link href="/css/output.css" rel="stylesheet" />
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
@@ -41,13 +47,13 @@
   let base_terminal_state = {
     commands: [
     {
-      call: "ls ~",
+      call: "list ~",
       out: `
         <div class = "flex gap-2">
         <a href="/index.html">.</a>
         <a href="/blog.html">blog</a>
         <a href="/portfolio.html">portfolio</a>
-        <a href="/problems.html">problem_of_the_week</a>
+        <a href="/problems.html">problems</a>
         intro.md
         </div>
       `
@@ -58,7 +64,8 @@
       call: "",
       out: ""
     },
-    current_command: "ls",
+    path: "",
+    current_command: "goto",
 
     handle() {
       console.log(this.current_command)
@@ -66,8 +73,19 @@
       let out = ""
       this.current_command = ""
 
+      if (com == "list ~") {
+      out = `
+        <div class = "flex gap-2">
+        <a href="/index.html">.</a>
+        <a href="/blog.html">blog</a>
+        <a href="/portfolio.html">portfolio</a>
+        <a href="/problems.html">problems</a>
+        intro.md
+        </div>
+      `
+      }
       //ls
-      if (com == "ls") {
+      if (com == "list") {
         out = `
         <div class = "flex gap-2 w-full flex-wrap">
           <template x-for="file in available_files">
@@ -86,8 +104,18 @@
       if (com == this.special_command.call) {
         out = this.special_command.out
       }
+      if (com == "help") {
+        out = `
+          <div>
+            <p>help - display this help message </p>
+            <p>list - list files and directories</p>
+            <p>goto <directory> - goto directory (. is this directory and .. is the parent directory)</p>
+            <p>show <file> - show file contents</p>
+          </div>
+        `
+      }
       let com_parts = com.split(" ");
-      if (com_parts[0] == "cd") {
+      if (com_parts[0] == "goto") {
         if (com_parts.length == 1 || com_parts[1].trim() == "") {
           window.location.href = "/"
         }
@@ -120,8 +148,10 @@ document.addEventListener('alpine:init', () => {
 </script>
     <script>
 
+base_terminal_state.path = "/blog/AI_is_bad_for_programming";
+
 base_terminal_state.commands = [...base_terminal_state.commands, {
-  call: "./display_post"
+  call: "show post.md"
   ,out: `
   <div class="sm:px-none w-full sm:w-3/4 lg:w-1/2">
     <h1>I don&#x27;t use AI for programming</h1>
@@ -164,7 +194,7 @@ Merry christmas and a happy new year!</p>
 }];
 
 base_terminal_state.special_command = {
-  call: "./display_post"
+  call: "show post.md"
   ,out: `
   <div class="sm:px-none w-full sm:w-3/4 lg:w-1/2">
     <h1>I don&#x27;t use AI for programming</h1>
@@ -208,8 +238,9 @@ Merry christmas and a happy new year!</p>
 
 
 base_terminal_state.available_files = [
-  {name: ".."}
-  {name: ".", path: "/posts/AI_is_bad_for_programming.html"},
+  {name: "..", path: "/blog.html"},
+  {name: ".", path: "/blog/AI_is_bad_for_programming.html"},
+  {name: "post.md", path:"FILE"}
 ]
 
 set_state()
@@ -220,15 +251,15 @@ set_state()
     <div x-data="terminal_state">
     <template x-for="command in commands">
       <div>
-      <span class = "font-bold flex flex-row gap-1"><div class="text-green-500">tage@site:~$ </div><div x-text="command.call"></div></span>
+      <span class = "font-bold flex flex-row gap-1"><div class="text-green-500">tage@site:~<span x-text="path"></span>$ </div><div x-text="command.call"></div></span>
 
       <div class = "" x-html='command.out'>
       </div>
     </div>
     </template>
-      <span class = "font-bold flex flex-row gap-1"><div class="text-green-500">tage@site:~$ </div>
+      <span class = "font-bold flex flex-row gap-1"><div class="text-green-500">tage@site:~<span x-text="path"></span>$ </div>
       <form @submit.prevent="handle">
-      <input class = "bg-black text-white font-bold outline-0" id="term" x-model="current_command" autofocus onblur = "this.focus({preventScroll: true})"autocomplete="off">
+      <input class = "bg-black text-white font-bold outline-0" id="term" x-model="current_command" onblur="this.focus()" autofocus autocomplete="off">
       </form>
       </span>
     

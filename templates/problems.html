@@ -1,0 +1,84 @@
+<script>
+
+
+base_terminal_state.path = "/problems"
+base_terminal_state.commands = 
+[...base_terminal_state.commands,
+    {
+      call: "show problems.md",
+      out: `
+<h1>Problems</h1>
+<br>
+{{ #each problem }}
+
+  <h2>Problem {{ no }}</h2>
+
+  
+  <p>{{ problem }}</p>
+
+
+  {{ #if img_link }}
+  <img class = "max-w-[300px]" src="{{ img_link }}">
+  {{ /if }}
+
+  {{ #if solution_path }}
+  <a href="{{ solution_path }}">-- goto solution --</a> 
+  <br>
+  <br>
+  {{ else }}
+  <p>-- A solution to this problem will be published by the end of the week --</p> 
+  {{ /if }}
+</div>
+{{ else }}
+No problem has been published yet
+{{ /each }}
+        ` 
+    }
+    ];
+
+base_terminal_state.available_files = [
+  { name: ".", path: "/problems.html" },
+  {name:"..", path:"/index.html"},
+  {name:"problems.md", path:"FILE"},
+  {{ #each problem }}
+  {{ #if solution_path }}
+    {name: "{{no}}", path: "{{solution_path}}"},
+  {{ /if }}
+  {{ /each }}
+]
+
+base_terminal_state.special_command = 
+    {
+      call: "show problems.md",
+      out: `
+<h1>Problems</h1>
+<br>
+{{ #each problem }}
+
+  <h2>Problem {{ no }}</h2>
+
+  
+  <p>{{ problem }}</p>
+
+
+  {{ #if img_link }}
+  <img class = "max-w-[300px]" src="{{ img_link }}">
+  {{ /if }}
+
+  {{ #if solution_path }}
+  <a href="{{ solution_path }}">-- goto solution --</a> 
+  <br>
+  <br>
+  {{ else }}
+  <p>-- A solution to this problem will be published by the end of the week --</p> 
+  {{ /if }}
+</div>
+{{ else }}
+No problem has been published yet
+{{ /each }}
+        ` 
+    }
+
+set_state()
+
+</script>

@@ -8,7 +8,7 @@ tags:
   - "3D"
   - "obj"
   - "parsing"
-path: "/posts/terminal-rendering-2.html"
+path: "/blog/terminal-rendering-2.html"
 ---
 
 # Introduction

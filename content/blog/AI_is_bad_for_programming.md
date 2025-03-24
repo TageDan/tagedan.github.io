@@ -7,11 +7,11 @@ tags:
   - "AI"
   - "programming"
   - "opinion"
-path: "/posts/AI_is_bad_for_programming.html"
+path: "/blog/AI_is_bad_for_programming.html"
+name: "AI_is_bad_for_programming"
 ---
 
 I don't use AI for programming and there are some reason as to why. I have tried using AI before and it has even been quite useful when I get stuck on something becuase I failed to consider some wierd edge-case or to generate a quick boilerplate of a web-page and such. But when it comes to my daily programming I will never use AI, no matter how good it gets. If you wan't to know why then brace yourself for rant and keep reading.
-
 
 # Why I don't use AI / My takes
 

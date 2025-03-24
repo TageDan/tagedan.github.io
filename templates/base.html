@@ -24,18 +24,144 @@
 
     <script>
       hljs.highlightAll();
+      window.addEventListener("load", () => {
+    setTimeout(() => {window.scrollTo(0,0); console.log("hi")}, 50);
+        
+      })
+
+
+      function update_headers() {
+        for (h_tag in document.querySelectorAll("h1")) {
+          
+        }
+      }
     </script>
     <link href="/css/output.css" rel="stylesheet" />
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
   </head>
 
   <body>
-    <div
-      class="w-full flex flex-col sm:flex-row sm:justify-center content-center gap-1 text-center border-b"
-    >
-      <a href="/index.html">Home</a>
-      <a href="/blog.html">Blog</a>
-      <a href="/portfolio.html">Portfolio</a>
+<script>
+
+
+  let base_terminal_state = {
+    commands: [
+    {
+      call: "list ~",
+      out: `
+        <div class = "flex gap-2">
+        <a href="/index.html">.</a>
+        <a href="/blog.html">blog</a>
+        <a href="/portfolio.html">portfolio</a>
+        <a href="/problems.html">problems</a>
+        intro.md
+        </div>
+      `
+    },
+    ],
+    available_files: [],
+    special_command: {
+      call: "",
+      out: ""
+    },
+    path: "",
+    current_command: "goto",
+
+    handle() {
+      console.log(this.current_command)
+      let com = this.current_command
+      let out = ""
+      this.current_command = ""
+
+      if (com == "list ~") {
+      out = `
+        <div class = "flex gap-2">
+        <a href="/index.html">.</a>
+        <a href="/blog.html">blog</a>
+        <a href="/portfolio.html">portfolio</a>
+        <a href="/problems.html">problems</a>
+        intro.md
+        </div>
+      `
+      }
+      //ls
+      if (com == "list") {
+        out = `
+        <div class = "flex gap-2 w-full flex-wrap">
+          <template x-for="file in available_files">
+            <div>
+              <template x-if="file.path != 'FILE'">
+                <a x-bind:href="file.path" x-text='file.name'>
+              </template>
+              <template x-if="file.path == 'FILE'">
+                <div x-text='file.name'></div>
+              </template>
+            </div>
+          </template>
+        </div>
+        ` 
+      }
+      if (com == this.special_command.call) {
+        out = this.special_command.out
+      }
+      if (com == "help") {
+        out = `
+          <div>
+            <p>help - display this help message </p>
+            <p>list - list files and directories</p>
+            <p>goto <directory> - goto directory (. is this directory and .. is the parent directory)</p>
+            <p>show <file> - show file contents</p>
+          </div>
+        `
+      }
+      let com_parts = com.split(" ");
+      if (com_parts[0] == "goto") {
+        if (com_parts.length == 1 || com_parts[1].trim() == "") {
+          window.location.href = "/"
+        }
+        for (i in this.available_files) {
+          if (this.available_files[i].name == com_parts[1].trim()) {
+            window.location.href = this.available_files[i].path
+          }
+        }
+        
+      }
+      this.commands = [...this.commands, {
+      call:com,
+      out: out,
+      }]
+      setTimeout(() => {      hljs.highlightAll();}, 50);
+      
+    },
+
+
+}
+
+function set_state() {
+  
+document.addEventListener('alpine:init', () => {
+  Alpine.data('terminal_state', () => (
+  base_terminal_state
+))
+})
+}
+</script>
+    {{{ content }}}
+    <div x-data="terminal_state">
+    <template x-for="command in commands">
+      <div>
+      <span class = "font-bold flex flex-row gap-1"><div class="text-green-500">tage@site:~<span x-text="path"></span>$ </div><div x-text="command.call"></div></span>
+
+      <div class = "" x-html='command.out'>
+      </div>
     </div>
-    <div>{{{ content }}}</div>
+    </template>
+      <span class = "font-bold flex flex-row gap-1"><div class="text-green-500">tage@site:~<span x-text="path"></span>$ </div>
+      <form @submit.prevent="handle">
+      <input class = "bg-black text-white font-bold outline-0" id="term" x-model="current_command" onblur="this.focus()" autofocus autocomplete="off">
+      </form>
+      </span>
+    
+    </div>
   </body>
 </html>

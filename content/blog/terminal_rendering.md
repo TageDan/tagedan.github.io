@@ -7,7 +7,8 @@ tags:
   - "rust"
   - "graphics"
   - "terminal"
-path: "/posts/terminal_rendering.html"
+path: "/blog/terminal_rendering.html"
+name: "terminal_rendering"
 ---
 
 # Introduction

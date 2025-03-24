@@ -1,0 +1,59 @@
+
+<script>
+
+base_terminal_state.path = "/problems/problem_{{no}}"
+
+base_terminal_state.commands = 
+[...base_terminal_state.commands,
+    {
+      call: "show content.md",
+      out: `
+<h1>Problem {{ no }}</h1>
+<br>
+<p>{{ problem }}</p>
+<br>
+
+  {{ #if img_link }}
+    <img class = "max-w-[300px]" src="{{ img_link }}">
+  {{ /if }}
+  <br>
+  <h2>Solution</h2>
+
+  {{{ content }}}
+<br>
+  
+
+        ` 
+    }
+    ];
+
+base_terminal_state.available_files = [
+  { name: ".", path: "/" },
+  {name:"..", path:"/index.html"},
+  {name:"content.md", path:"FILE"},
+]
+
+base_terminal_state.special_command = {
+      call: "show content.md",
+      out: `
+<h1>Problem {{ no }}</h1>
+<br>
+<p>{{ problem }}</p>
+<br>
+
+  {{ #if img_link }}
+    <img class = "max-w-[300px]" src="{{ img_link }}">
+  {{ /if }}
+  <br>
+  <h2>Solution</h2>
+
+  {{{ content }}}
+<br>
+  
+
+        ` 
+}
+
+set_state()
+
+</script>

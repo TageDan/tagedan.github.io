@@ -16,7 +16,7 @@
     </script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>TageDan</title>
+    <title></title>
     <link rel="stylesheet" href="/css/highlight.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
 
@@ -53,7 +53,7 @@
         <a href="/index.html">.</a>
         <a href="/blog.html">blog</a>
         <a href="/portfolio.html">portfolio</a>
-        <a href="/problems.html">problems</a>
+        <a href="/problems.html">weekly_problems</a>
         intro.md
         </div>
       `
@@ -79,7 +79,7 @@
         <a href="/index.html">.</a>
         <a href="/blog.html">blog</a>
         <a href="/portfolio.html">portfolio</a>
-        <a href="/problems.html">problems</a>
+        <a href="/problems.html">weekly_problems</a>
         intro.md
         </div>
       `
@@ -146,45 +146,54 @@ document.addEventListener('alpine:init', () => {
 })
 }
 </script>
-    <script>
+    
+<script>
+
+base_terminal_state.path = "/problems/problem_10"
 
 base_terminal_state.commands = 
 [...base_terminal_state.commands,
     {
-      call: "show intro.md",
+      call: "show content.md",
       out: `
-        <h1>Hi, My name is Tage Danielsson</h1>
-        <h2>Welcome to my personal website</h2>
-        <p>This is where I <a href="/portfolio.html">showcase my projects</a> and
-        keep my <a href="/blog.html">blog</a>. I\'m glad to see you here :)
-        </p>
-        <p>I also try to publish <a href="/problems.html">weekly problems</a>!
-        <p>checkout my <a href="https://github.com/TageDan">github</a></p>
-        <p>tip: use "help" to list available commands.</p>
+<h1>Problem 10</h1>
+<br>
+<p>this is a test problem</p>
+<br>
+
+  <br>
+  <h2>Solution</h2>
+
+  
+<br>
+  
+
         ` 
     }
     ];
 
 base_terminal_state.available_files = [
   { name: ".", path: "/" },
-  {name:"blog", path:"/blog.html"},
-  {name:"portfolio", path:"/portfolio.html"},
-  {name:"problems", path:"/problems.html"}, 
-  {name:"intro.md", path:"FILE"},
+  {name:"..", path:"/index.html"},
+  {name:"content.md", path:"FILE"},
 ]
 
 base_terminal_state.special_command = {
-  call: "show intro.md",
-  out: `
-        <h1>Hi, My name is Tage Danielsson</h1>
-        <h2>Welcome to my personal website</h2>
-        <p>This is where I <a href="/portfolio.html">showcase my projects</a> and
-        keep my <a href="/blog.html">blog</a>. I\'m glad to see you here :)
-        </p>
-        <p>checkout my <a href="https://github.com/TageDan">github</a></p>
-        <p>tip: use "help" to list available commands.</p>
-        `
+      call: "show content.md",
+      out: `
+<h1>Problem 10</h1>
+<br>
+<p>this is a test problem</p>
+<br>
+
+  <br>
+  <h2>Solution</h2>
+
   
+<br>
+  
+
+        ` 
 }
 
 set_state()

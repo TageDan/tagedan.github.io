@@ -24,44 +24,232 @@
 
     <script>
       hljs.highlightAll();
+      window.addEventListener("load", () => {
+    setTimeout(() => {window.scrollTo(0,0); console.log("hi")}, 50);
+        
+      })
+
+
+      function update_headers() {
+        for (h_tag in document.querySelectorAll("h1")) {
+          
+        }
+      }
     </script>
     <link href="/css/output.css" rel="stylesheet" />
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
   </head>
 
   <body>
-    <div
-      class="w-full flex flex-col sm:flex-row sm:justify-center content-center gap-1 text-center border-b"
-    >
-      <a href="/index.html">Home</a>
-      <a href="/blog.html">Blog</a>
-      <a href="/portfolio.html">Portfolio</a>
+<script>
+
+
+  let base_terminal_state = {
+    commands: [
+    {
+      call: "list ~",
+      out: `
+        <div class = "flex gap-2">
+        <a href="/index.html">.</a>
+        <a href="/blog.html">blog</a>
+        <a href="/portfolio.html">portfolio</a>
+        <a href="/problems.html">problems</a>
+        intro.md
+        </div>
+      `
+    },
+    ],
+    available_files: [],
+    special_command: {
+      call: "",
+      out: ""
+    },
+    path: "",
+    current_command: "goto",
+
+    handle() {
+      console.log(this.current_command)
+      let com = this.current_command
+      let out = ""
+      this.current_command = ""
+
+      if (com == "list ~") {
+      out = `
+        <div class = "flex gap-2">
+        <a href="/index.html">.</a>
+        <a href="/blog.html">blog</a>
+        <a href="/portfolio.html">portfolio</a>
+        <a href="/problems.html">problems</a>
+        intro.md
+        </div>
+      `
+      }
+      //ls
+      if (com == "list") {
+        out = `
+        <div class = "flex gap-2 w-full flex-wrap">
+          <template x-for="file in available_files">
+            <div>
+              <template x-if="file.path != 'FILE'">
+                <a x-bind:href="file.path" x-text='file.name'>
+              </template>
+              <template x-if="file.path == 'FILE'">
+                <div x-text='file.name'></div>
+              </template>
+            </div>
+          </template>
+        </div>
+        ` 
+      }
+      if (com == this.special_command.call) {
+        out = this.special_command.out
+      }
+      if (com == "help") {
+        out = `
+          <div>
+            <p>help - display this help message </p>
+            <p>list - list files and directories</p>
+            <p>goto <directory> - goto directory (. is this directory and .. is the parent directory)</p>
+            <p>show <file> - show file contents</p>
+          </div>
+        `
+      }
+      let com_parts = com.split(" ");
+      if (com_parts[0] == "goto") {
+        if (com_parts.length == 1 || com_parts[1].trim() == "") {
+          window.location.href = "/"
+        }
+        for (i in this.available_files) {
+          if (this.available_files[i].name == com_parts[1].trim()) {
+            window.location.href = this.available_files[i].path
+          }
+        }
+        
+      }
+      this.commands = [...this.commands, {
+      call:com,
+      out: out,
+      }]
+      setTimeout(() => {      hljs.highlightAll();}, 50);
+      
+    },
+
+
+}
+
+function set_state() {
+  
+document.addEventListener('alpine:init', () => {
+  Alpine.data('terminal_state', () => (
+  base_terminal_state
+))
+})
+}
+</script>
+    <script>
+
+base_terminal_state.path = "/blog";
+
+
+base_terminal_state.commands = 
+[...base_terminal_state.commands,
+    {
+      call: "show post_list.md",
+      out: `
+        <h1>The Blog</h1>
+<div>
+  <div>
+    <a href="/blog/terminal_rendering.html">
+    <h1>Create a 3D-Terminal Renderer</h1>
+    </a>
+    <div> + 2024-11-05</div>
+    <div> + Tage Danielsson</div>
+    <div> + While creating our 3D-game &#x27;TERMTRACK&#x27; we needed a 3d terminal renderer. Here is how to create one!</div>
+  </div>
+  <div>
+    <a href="/blog/AI_is_bad_for_programming.html">
+    <h1>I don&#x27;t use AI for programming</h1>
+    </a>
+    <div> + 2024-12-27</div>
+    <div> + Tage Danielsson</div>
+    <div> + A rant about why I don&#x27;t use AI while programming.</div>
+  </div>
+  <div>
+    <a href="/blog/static_site_generation_rust.html">
+    <h1>Static Site Generation using Rust</h1>
+    </a>
+    <div> + 2024-08-12</div>
+    <div> + Tage Danielsson</div>
+    <div> + How I made my own framework to generate the static pages on this site using rust</div>
+  </div>
+</div>
+        ` 
+    }
+    ];
+
+base_terminal_state.special_command = 
+    {
+      call: "show post_list.md",
+      out: `
+        <h1>The Blog</h1>
+<div>
+  <div>
+    <a href="/blog/terminal_rendering.html">
+    <h1>Create a 3D-Terminal Renderer</h1>
+    </a>
+    <div> + 2024-11-05</div>
+    <div> + Tage Danielsson</div>
+    <div> + While creating our 3D-game &#x27;TERMTRACK&#x27; we needed a 3d terminal renderer. Here is how to create one!</div>
+  </div>
+  <div>
+    <a href="/blog/AI_is_bad_for_programming.html">
+    <h1>I don&#x27;t use AI for programming</h1>
+    </a>
+    <div> + 2024-12-27</div>
+    <div> + Tage Danielsson</div>
+    <div> + A rant about why I don&#x27;t use AI while programming.</div>
+  </div>
+  <div>
+    <a href="/blog/static_site_generation_rust.html">
+    <h1>Static Site Generation using Rust</h1>
+    </a>
+    <div> + 2024-08-12</div>
+    <div> + Tage Danielsson</div>
+    <div> + How I made my own framework to generate the static pages on this site using rust</div>
+  </div>
+</div>
+        ` 
+    }
+  ;
+
+base_terminal_state.available_files = [
+  { name: "..", path: "/" },
+  { name: ".", path: "/blog.html" },
+  {name:"post_list.md", path:"FILE"},
+  {name: "terminal_rendering", path: "/blog/terminal_rendering.html"},
+  {name: "AI_is_bad_for_programming", path: "/blog/AI_is_bad_for_programming.html"},
+  {name: "static_site_generation_rust", path: "/blog/static_site_generation_rust.html"},
+];
+
+set_state()
+
+</script>
+
+    <div x-data="terminal_state">
+    <template x-for="command in commands">
+      <div>
+      <span class = "font-bold flex flex-row gap-1"><div class="text-green-500">tage@site:~<span x-text="path"></span>$ </div><div x-text="command.call"></div></span>
+
+      <div class = "" x-html='command.out'>
+      </div>
     </div>
-    <div><div class="w-full flex justify-center">
-  <div class="w-2/3">
-    <div class="w-full text-center border-b"><h1>The Blog</h1></div>
-    <div class="w-full"><div class="">
-  <div class="p-2 border-b">
-    <a href="/posts/terminal_rendering.html"><div class="text-3xl">Create a 3D-Terminal Renderer</div></a>
-    <div>2024-11-05</div>
-    <div>Tage Danielsson</div>
-    <div class="mt-2 text-xl">While creating our 3D-game &#x27;TERMTRACK&#x27; we needed a 3d terminal renderer. Here is how to create one!</div>
-  </div>
-  <div class="p-2 border-b">
-    <a href="/posts/AI_is_bad_for_programming.html"><div class="text-3xl">I don&#x27;t use AI for programming</div></a>
-    <div>2024-12-27</div>
-    <div>Tage Danielsson</div>
-    <div class="mt-2 text-xl">A rant about why I don&#x27;t use AI while programming.</div>
-  </div>
-  <div class="p-2 border-b">
-    <a href="/posts/static_site_generation_rust.html"><div class="text-3xl">Static Site Generation using Rust</div></a>
-    <div>2024-08-12</div>
-    <div>Tage Danielsson</div>
-    <div class="mt-2 text-xl">How I made my own framework to generate the static pages on this site using rust</div>
-  </div>
-</div>
-</div>
-  </div>
-</div>
-</div>
+    </template>
+      <span class = "font-bold flex flex-row gap-1"><div class="text-green-500">tage@site:~<span x-text="path"></span>$ </div>
+      <form @submit.prevent="handle">
+      <input class = "bg-black text-white font-bold outline-0" id="term" x-model="current_command" onblur="this.focus()" autofocus autocomplete="off">
+      </form>
+      </span>
+    
+    </div>
   </body>
 </html>

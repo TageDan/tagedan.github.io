@@ -9,7 +9,8 @@ tags:
   - "handlebars"
   - "static site generation"
   - "markdown"
-path: "/posts/static_site_generation_rust.html"
+path: "/blog/static_site_generation_rust.html"
+name: "static_site_generation_rust"
 ---
 
 I have for a long time wanted to build a website where I could have my own blog and project portfolio.

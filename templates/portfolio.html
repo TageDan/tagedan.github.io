@@ -1,16 +1,43 @@
-<div class="w-full flex justify-center">
-  <div class="w-3/4 lg:w-2/3 text-center">
-    <h1>Portfolio</h1>
-    <div class="w-full flex flex-wrap justify-center">
-      {{ #each project }}
-      <div
-        class="text-wrap min-w-1/3 border rounded-3xl m-2 p-2 text-center flex flex-col items-center"
-      >
-        <h3><a href="{{ path }}">{{ title }}</a></h3>
-        <img class="max-w-60" src="{{ img }}" />
-        <p class="max-w-60">{{ description }}</p>
-      </div>
-      {{ /each }}
-    </div>
-  </div>
+<script>
+
+base_terminal_state.path = "/portfolio";
+
+base_terminal_state.commands = 
+[...base_terminal_state.commands,
+    {
+      call: "show portfolio.md",
+      out: `
+<h1>Portfolio</h1>
+{{ #each project }}
+  <h3><a href="{{ path }}">{{ title }}</a></h3>
+  <img class="max-w-[300px]" src="{{ img }}" />
+  <p>{{ description }}</p>
 </div>
+{{ /each }}
+        ` 
+    }
+    ];
+
+base_terminal_state.available_files = [
+  { name: ".", path: "/portfolio.html" },
+  {name:"..", path:"/index.html"},
+  {name:"portfolio.md", path:"FILE"},
+]
+
+base_terminal_state.special_command = {
+  call: "show portfolio.md",
+  out: `
+<h1>Portfolio</h1>
+{{ #each project }}
+  <h3><a href="{{ path }}">{{ title }}</a></h3>
+  <img class="max-w-[300px]" src="{{ img }}" />
+  <p>{{ description }}</p>
+</div>
+{{ /each }}
+        `
+  
+}
+
+set_state()
+
+</script>
