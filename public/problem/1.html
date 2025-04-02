@@ -1,0 +1,72 @@
+<html lang="en">
+  <head>
+    <!-- Google tag (gtag.js) -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-0850QBCD1V"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+
+      gtag("config", "G-0850QBCD1V");
+    </script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title></title>
+    <link rel="stylesheet" href="/css/highlight.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/go.min.js"></script>
+
+    <script>
+      hljs.highlightAll();
+    </script>
+    <script src="/main.js"></script>
+    <link href="/css/output.css" rel="stylesheet" />
+  </head>
+
+  <body>
+    <div
+      class="w-full flex flex-col sm:flex-row sm:justify-center content-center gap-1 text-center border-b"
+    >
+      <a href="/index.html">Home</a>
+      <a href="/blog.html">Blog</a>
+      <a href="/portfolio.html">Portfolio</a>
+      <a href="/problems.html">Problems</a>
+    </div>
+    <div><div class = "flex justify-center w-full">
+<div class = "flex flex-col items-center w-full sm:w-3/4 lg:w-1/2 p-5">
+<h1 class = "w-[70%] text-center border-b pb-5 mb-3">
+#1 Walk Around Earth
+</h1>
+<p>Is it possible to walk exactly one kilometer south, one kilometer east and one kilometer north and end up at the same point as you started? If so, how?</p>
+<drop-down title="solution">
+<div slot="content">
+<p>Yes!! It is possible. And in infinitely many ways actually.</p>
+<p>The first way is in my opinion the most trivial one:
+Start at the north pole.</p>
+<p>Your distance to the poles always stays the same when you're going east/west (since you are walking in a circle along the same latitude). This means that if you were to start your journey at the northpole you would be one kilometer south of the north pole after the first kilometer (trivially), after the second kilometer you would still be one kilometer south of the north pole (only in a different location), and after walking one kilometer north to complete the journey you would be back at the north pole, just like what we wanted.</p>
+<p>The second way to do it is to start one kilometer north of the south pole.</p>
+<p>In this scenario we exploit the fact that there is no east on the south pole (this is also the most iffy solution since you're never really walking east at all). After your first kilometer you are at the south pole. Then you walk one kilometer east on the south pole (do nothing) and then you walk back to you're starting point (note that you could have actually walked north to some other point, but that isn't too useful for us).</p>
+<p>The rest of the ways to do it all follow a similiar pattern. We will start with the easiest one: Start anywhere on the circle that's one kilometer north of the circle (of latitude) that's one kilometer in circumference.</p>
+<p>I know this one was a little wordy. I hope this image can help:
+<img src="/assets/circles-over-southpole.png" alt="circles" />
+(In the image it's any point on the top circle you should stand on)</p>
+<p>This works becuase after walking one kilometer east on the lower circle you will end up on the same point. So you are basically walking one kilometer south, one lap around the circle of latitude you're on and finaly one kilometer north back to the same point as you started.</p>
+<p>The infinite solutions comes from extending this last one. Instead of walking one lap around the circle of latitude we could walk any whole number of laps. In other word we would need to start anywhere on the circle that is one kilometer north of the circle with circumference <code>1000/n</code> meters for any positive integer <code>n</code>. (this actually (kinda) includes the second example where we walked to the south pole and back if we let <code>n</code> go to infinity)</p>
+<p>That's all the possibilities i could think of, I hoped you enjoyed solving this little problem and that you may come back for the next one.</p>
+<br>
+<p>If you're thinking about the possibility of walking laps around circles of latitude on the northern hemisphere. There is an easy way to intuitively understand that it's not possible:</p>
+<p>The smallest possible circle of latitude you could get to on the northern hemisphere is the one that is exactly one kilometer south of the north pole. Since walking one kilometer south (along a great circle) won't affect the curvature of the earth much we will consider the earth around the north pole as a flat plane. Then the circumfrence of this smallest circle will be <code>2πr = 2π * 1 = 2π</code> kilometers. We only walk one kilometer east so we won't be able to make a single lap around this circle even though it's the smallest circle we can possibly get to, hence we can't lap any circle on the northern hemisphere.</p>
+</div>
+</drop-down>
+
+</div>
+</div>
+</div>
+  </body>
+</html>

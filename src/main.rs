@@ -23,7 +23,18 @@ struct ProjectMetadata {
     img: String,
 }
 
+// Problem Metadata
+#[derive(Deserialize, Serialize)]
+struct ProblemMetadata {
+    no: usize,
+    title: String,
+    path: String,
+}
+
 fn main() {
+    let mut problems = markdown_utils::get_all_metadata::<ProblemMetadata>("./content/problem");
+    problems.sort_unstable_by_key(|x| usize::MAX - x.no);
+
     generator::MarkdownSiteGenerator::default()
         .add_file_path(
             "blog",
@@ -41,5 +52,7 @@ fn main() {
         )
         .add_content_folder_path::<Metadata>("posts/", ("base", "post"))
         .add_file_path("index", ("base", json!({"title": "TageDan"}), ("index")))
-        .add_file_path("portfolio", ("base", json!({"title": "Portfolio"}), ("portfolio", json!({"project": markdown_utils::get_all_metadata::<ProjectMetadata>("./content/projects")}))));
+        .add_file_path("portfolio", ("base", json!({"title": "Portfolio"}), ("portfolio", json!({"project": markdown_utils::get_all_metadata::<ProjectMetadata>("./content/projects")}))))
+        .add_file_path("problems", ("base", json!({"title": "Problems"}), ("problems", json!({"problem": problems }))))
+        .add_content_folder_path::<ProblemMetadata>("problem/", ("base", "problem"));
 }
