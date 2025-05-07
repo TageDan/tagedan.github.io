@@ -1,0 +1,201 @@
+<html lang="en">
+  <head>
+    <!-- Google tag (gtag.js) -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-0850QBCD1V"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+
+      gtag("config", "G-0850QBCD1V");
+    </script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title></title>
+    <link rel="stylesheet" href="/css/highlight.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/go.min.js"></script>
+
+    <script>
+      hljs.highlightAll();
+    </script>
+    <script src="/main.js"></script>
+    <link href="/css/output.css" rel="stylesheet" />
+  </head>
+
+  <body>
+    <div
+      class="w-full flex flex-col sm:flex-row sm:justify-center content-center gap-1 text-center border-b"
+    >
+      <a href="/index.html">Home</a>
+      <a href="/blog.html">Blog</a>
+      <a href="/portfolio.html">Portfolio</a>
+      <a href="/problems.html">Problems</a>
+    </div>
+    <div><div class = "flex justify-center w-full">
+<div class = "flex flex-col items-center w-full sm:w-3/4 lg:w-1/2 p-5">
+<h1 class = "w-[70%] text-center border-b pb-5 mb-3">
+#5 Reverse Antineering
+</h1>
+<p>The following code was ran with an peculiar initial state in place of the comment <code># unknown starting state</code></p>
+<pre><code class="language-rust">use std::sync::{Arc, atomic::AtomicBool};
+
+const GRID_SIZE: usize = 29;
+
+struct Mem([bool; GRID_SIZE * GRID_SIZE]);
+
+impl Mem {
+    fn new(grid: [bool; GRID_SIZE * GRID_SIZE]) -&gt; Self {
+        Self(grid)
+    }
+    fn get(&amp;self, x: u8, y: u8) -&gt; bool {
+        if y &gt;= GRID_SIZE as u8 || x &gt;= GRID_SIZE as u8 {
+            return false;
+        }
+        self.0[y as usize * GRID_SIZE + x as usize]
+    }
+    fn set(&amp;mut self, x: u8, y: u8, val: bool) {
+        self.0[y as usize * GRID_SIZE + x as usize] = val;
+    }
+}
+
+impl Default for Mem {
+    fn default() -&gt; Self {
+        Self::new([false; GRID_SIZE * GRID_SIZE])
+    }
+}
+
+#[derive(Clone, Copy, Debug)]
+#[repr(u8)]
+enum Dir {
+    Up,
+    Right,
+    Down,
+    Left,
+}
+
+struct Langton {
+    x: u8,
+    y: u8,
+    dir: Dir,
+}
+
+impl Langton {
+    fn new(x: u8, y: u8, dir: Dir) -&gt; Self {
+        Self { x, y, dir }
+    }
+
+    fn step(&amp;mut self) {
+        match self.dir {
+            Dir::Up =&gt; {
+                self.y = if self.y == 0 {
+                    GRID_SIZE as u8 - 1
+                } else {
+                    self.y - 1
+                }
+            }
+            Dir::Down =&gt; self.y = (self.y + 1) % GRID_SIZE as u8,
+            Dir::Left =&gt; {
+                self.x = if self.x == 0 {
+                    GRID_SIZE as u8 - 1
+                } else {
+                    self.x - 1
+                }
+            }
+            Dir::Right =&gt; self.x = (self.x + 1) % GRID_SIZE as u8,
+        }
+    }
+
+    fn turn_right(&amp;mut self) {
+        self.dir = match self.dir {
+            Dir::Up =&gt; Dir::Right,
+            Dir::Right =&gt; Dir::Down,
+            Dir::Down =&gt; Dir::Left,
+            Dir::Left =&gt; Dir::Up,
+        }
+    }
+    fn turn_left(&amp;mut self) {
+        self.dir = match self.dir {
+            Dir::Right =&gt; Dir::Up,
+            Dir::Down =&gt; Dir::Right,
+            Dir::Left =&gt; Dir::Down,
+            Dir::Up =&gt; Dir::Left,
+        }
+    }
+}
+
+fn display(mem: &amp;Mem) {
+    let mut res = String::new();
+    res.push_str("\x1b[H");
+    for y in 0..=(GRID_SIZE as u8 / 2) {
+        let mut line = String::new();
+        for x in 0..(GRID_SIZE as u8) {
+            if mem.get(x, y * 2) {
+                line.push_str("\x1b[107m");
+            } else {
+                line.push_str("\x1b[40m");
+            }
+
+            if mem.get(x, y * 2 + 1) {
+                line.push_str("\x1b[97m");
+            } else {
+                line.push_str("\x1b[30m");
+            }
+
+            line.push('\u{2584}');
+        }
+        line.push('\n');
+        res.push_str(&amp;line);
+    }
+    println!("{}", res);
+}
+
+fn main() {
+    let mut running = Arc::new(AtomicBool::new(true));
+    let mut r = running.clone();
+    println!("\x1b[2J");
+    let mut mem = Mem::new([
+        # unkown starting state
+    ]);
+    let mut langton = Langton::new(GRID_SIZE as u8 / 2, GRID_SIZE as u8 / 2, Dir::Right);
+    let mut i = 0;
+    while running.load(std::sync::atomic::Ordering::SeqCst) {
+        i += 1;
+        if mem.get(langton.x, langton.y) {
+            langton.turn_left();
+            mem.set(langton.x, langton.y, false);
+        } else {
+            langton.turn_right();
+            mem.set(langton.x, langton.y, true);
+        };
+        langton.step();
+        display(&amp;mem);
+        println!("\x1b[0m{i}");
+
+        if i == 3000 {
+            break;
+        }
+    }
+    println!("\x1b[2J");
+    display(&amp;mem);
+    println!("\x1b[0m{i}");
+    println!("{:?}", langton.dir);
+    println!("{};{}", langton.x, langton.y);
+}
+</code></pre>
+<p>It's output after finishing looked like this:
+<img src="/assets/PUZZLE5_IMAGE.png" alt="" /></p>
+<p>Are you able to reverse the execution of the program so that you can see what the initial state was?</p>
+<p>The code can also be found <a href="https://github.com/TageDan/Langton-rs/">here</a></p>
+
+</div>
+</div>
+</div>
+  </body>
+</html>

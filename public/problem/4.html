@@ -50,6 +50,44 @@
 How would you order these words?
 </div>
 </drop-down>
+<drop-down caption="solution">
+<div slot=content>
+<p>The answer is "frequency_ordering_encoding"</p>
+<p>The trick is to order the characters based on the number of times it is repeated in it's word. Grouping the characters based on how many times they are repeated would give us this:</p>
+<ul>
+<li>r f (one time)</li>
+<li>e q u (two times)</li>
+<li>n e (three times)</li>
+<li>c y (four times)</li>
+<li>r _ o (five times)</li>
+<li>d r e (six times)</li>
+<li>i n (seven times)</li>
+<li>g (eight times)</li>
+<li>e n _ (nine times)</li>
+<li>o c (ten times)</li>
+<li>d n i (eleven times)</li>
+<li>g (twelve times)</li>
+</ul>
+<p>Then in each of these groups order the characters alphabetically (or rather by ascii-value so '_' is before 'a')</p>
+<ul>
+<li>f r</li>
+<li>e q u</li>
+<li>e n</li>
+<li>c y</li>
+<li>_ o r</li>
+<li>d e r</li>
+<li>i n</li>
+<li>g</li>
+<li>_ e n</li>
+<li>c o</li>
+<li>d i n</li>
+<li>g</li>
+</ul>
+<p>Now just but all the characters together, one group after the other
+(fr)(equ)(en)(cy)(_or)(der)(in)(g)(_en)(co)(din)(g) = frequency_ordering_encoding</p>
+<p>Cool right :) (but probably not too useful)</p>
+</div>
+</drop-down>
 
 </div>
 </div>
